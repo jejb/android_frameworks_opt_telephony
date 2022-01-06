@@ -854,7 +854,9 @@ public class SipPhone extends SipPhoneBase {
         }
 
         public SipConnection(SipCall owner, SipProfile callee) {
-            this(owner, callee, getUriString(callee));
+            // FIXME: strip the domain since most SIP servers operate
+            // like PBXs, but this behaviour should be configurable
+            this(owner, callee, callee.getUserName());
         }
 
         @Override
