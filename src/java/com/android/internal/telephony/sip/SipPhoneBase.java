@@ -24,9 +24,11 @@ import android.os.Message;
 import android.os.RegistrantList;
 import android.os.ResultReceiver;
 import android.sysprop.TelephonyProperties;
+import android.telephony.Annotation.DataActivityType;
 import android.telephony.NetworkScanRequest;
 import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
+import android.telephony.TelephonyManager;
 
 import com.android.internal.telephony.Call;
 import com.android.internal.telephony.Connection;
@@ -134,8 +136,8 @@ abstract class SipPhoneBase extends Phone {
     }
 
     @Override
-    public DataActivityState getDataActivityState() {
-        return DataActivityState.NONE;
+    public @DataActivityType int getDataActivityState() {
+        return TelephonyManager.DATA_ACTIVITY_NONE;
     }
 
     /**
@@ -436,7 +438,7 @@ abstract class SipPhoneBase extends Phone {
     }
 
     @Override
-    public boolean isDataAllowed(int apnType) {
+    public boolean isDataAllowed() {
         return false;
     }
 
@@ -473,13 +475,6 @@ abstract class SipPhoneBase extends Phone {
     public boolean needsOtaServiceProvisioning() {
         // FIXME: what's this for SIP?
         return false;
-    }
-
-    //@Override
-    @Override
-    public LinkProperties getLinkProperties(String apnType) {
-        // FIXME: what's this for SIP?
-        return null;
     }
 
     /**
