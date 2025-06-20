@@ -20,6 +20,7 @@ import android.content.Context;
 import android.net.sip.SipProfile;
 
 import com.android.internal.telephony.PhoneNotifier;
+import com.android.internal.telephony.flags.FeatureFlags;
 import com.android.telephony.Rlog;
 
 import java.text.ParseException;
@@ -37,10 +38,10 @@ public class SipPhoneFactory {
      * @return the {@code SipPhone} object or null if the SIP URI is not valid
      */
     public static SipPhone makePhone(String sipUri, Context context,
-            PhoneNotifier phoneNotifier) {
+            PhoneNotifier phoneNotifier, FeatureFlags featureFlags) {
         try {
             SipProfile profile = new SipProfile.Builder(sipUri).build();
-            return new SipPhone(context, phoneNotifier, profile);
+            return new SipPhone(context, phoneNotifier, profile, featureFlags);
         } catch (ParseException e) {
             Rlog.w("SipPhoneFactory", "makePhone", e);
             return null;

@@ -39,6 +39,7 @@ import com.android.internal.telephony.OperatorInfo;
 import com.android.internal.telephony.Phone;
 import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.telephony.PhoneNotifier;
+import com.android.internal.telephony.flags.FeatureFlags;
 import com.android.internal.telephony.uicc.IccFileHandler;
 import com.android.telephony.Rlog;
 
@@ -51,8 +52,8 @@ abstract class SipPhoneBase extends Phone {
     private RegistrantList mRingbackRegistrants = new RegistrantList();
     private PhoneConstants.State mState = PhoneConstants.State.IDLE;
 
-    public SipPhoneBase(String name, Context context, PhoneNotifier notifier) {
-        super(name, notifier, context, new SipCommandInterface(context), false);
+    public SipPhoneBase(String name, Context context, PhoneNotifier notifier, FeatureFlags featureFlags) {
+        super(name, notifier, context, new SipCommandInterface(context), false, featureFlags);
     }
 
     @Override
@@ -131,11 +132,6 @@ abstract class SipPhoneBase extends Phone {
     }
 
     @Override
-    public PhoneConstants.DataState getDataConnectionState() {
-        return PhoneConstants.DataState.DISCONNECTED;
-    }
-
-    @Override
     public @DataActivityType int getDataActivityState() {
         return TelephonyManager.DATA_ACTIVITY_NONE;
     }
@@ -154,7 +150,10 @@ abstract class SipPhoneBase extends Phone {
      */
     /* package */ void notifyPreciseCallStateChanged() {
         /* we'd love it if this was package-scoped*/
-        super.notifyPreciseCallStateChangedP();
+        AsyncResult ar = new AsyncResult(null, this, null);
+        mPreciseCallStateRegistrants.notifyRegistrants(ar);
+
+        mNotifier.notifyPreciseCallState(this, null, null, null);
     }
 
     void notifyNewRingingConnection(Connection c) {
@@ -263,6 +262,11 @@ abstract class SipPhoneBase extends Phone {
     @Override
     public String getImei() {
         return null;
+    }
+
+    @Override
+    public int getImeiType() {
+        return IMEI_TYPE_UNKNOWN;
     }
 
     @Override

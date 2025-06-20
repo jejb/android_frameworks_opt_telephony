@@ -40,6 +40,7 @@ import com.android.internal.telephony.Connection;
 import com.android.internal.telephony.Phone;
 import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.telephony.PhoneNotifier;
+import com.android.internal.telephony.flags.FeatureFlags;
 import com.android.telephony.Rlog;
 
 import java.text.ParseException;
@@ -71,8 +72,8 @@ public class SipPhone extends SipPhoneBase {
 
     private long mTimeOfLastValidHoldRequest = System.currentTimeMillis();
 
-    SipPhone (Context context, PhoneNotifier notifier, SipProfile profile) {
-        super("SIP:" + profile.getUriString(), context, notifier);
+    SipPhone (Context context, PhoneNotifier notifier, SipProfile profile, FeatureFlags featureFlags) {
+        super("SIP:" + profile.getUriString(), context, notifier, featureFlags);
 
         if (DBG) log("new SipPhone: " + hidePii(profile.getUriString()));
         mRingingCall = new SipCall();
